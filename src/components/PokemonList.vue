@@ -1,8 +1,10 @@
 <template>
   <div>
     <h1>ポケモン図鑑（日本語）</h1>
+    <input type="text" v-model="searchQuery" placeholder="ポケモンを検索" />
+
     <ul>
-      <li v-for="poke in pokemons" :key="poke.id" @click="showDetails(poke)">
+      <li v-for="poke in filteredPokemons" :key="poke.id" @click="showDetails(poke)">
         <img :src="poke.image" alt="pokemon image" width="100" height="100"/>
         {{ poke.japaneseName }}
       </li>
@@ -23,7 +25,15 @@ export default {
   data() {
     return {
       pokemons: [],
-      selectedPokemon: null
+      selectedPokemon: null,
+      searchQuery: ''
+    }
+  },
+  computed: {
+    filteredPokemons() {
+      return this.pokemons.filter(poke =>
+        poke.japaneseName.toLowerCase().includes(this.searchQuery.toLowerCase())
+      )
     }
   },
   async mounted() {
