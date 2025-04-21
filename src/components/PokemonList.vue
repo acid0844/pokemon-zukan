@@ -19,8 +19,8 @@
       <h2>{{ selectedPokemon.japaneseName }}の詳細</h2>
       <img :src="selectedPokemon.image" alt="pokemon image" class="pokemon-detail-image"/>
       <p><strong>タイプ:</strong> {{ selectedPokemon.types.join(', ') }}</p>
-      <p><strong>高さ:</strong> {{ selectedPokemon.height / 151 }} m</p>
-      <p><strong>重さ:</strong> {{ selectedPokemon.weight / 151 }} kg</p>
+      <p><strong>高さ:</strong> {{ selectedPokemon.height / 10 }} m</p>
+      <p><strong>重さ:</strong> {{ selectedPokemon.weight / 10 }} kg</p>
     </div>
   </div>
 </template>
