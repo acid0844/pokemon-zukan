@@ -31,7 +31,27 @@ export default {
     return {
       pokemons: [],
       selectedPokemon: null,
-      searchQuery: ''
+      searchQuery: '',
+      typeMap: {
+        normal: 'ノーマル',
+        fighting: 'かくとう',
+        flying: 'ひこう',
+        poison: 'どく',
+        ground: 'じめん',
+        rock: 'いわ',
+        bug: 'むし',
+        ghost: 'ゴースト',
+        steel: 'はがね',
+        fire: 'ほのお',
+        water: 'みず',
+        grass: 'くさ',
+        electric: 'でんき',
+        psychic: 'エスパー',
+        ice: 'こおり',
+        dragon: 'ドラゴン',
+        dark: 'あく',
+        fairy: 'フェアリー'
+      }
     }
   },
   computed: {
@@ -60,7 +80,7 @@ export default {
           id,
           japaneseName: japaneseNameObj ? japaneseNameObj.name : pokemon.name,
           image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-          types: detailsData.types.map(type => type.type.name),
+          types: detailsData.types.map(type => this.typeMap[type.type.name] || type.type.name), // 日本語に変換
           height: detailsData.height,
           weight: detailsData.weight
         }
@@ -76,6 +96,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 .container {
