@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1>データ一覧</h1>
+    <h1>ポケモン図鑑（日本語）</h1>
     <ul>
-      <li v-for="item in items" :key="item.name">{{ item.name }}</li>
+      <li v-for="poke in pokemons" :key="poke.id">{{ poke.japaneseName }}</li>
     </ul>
   </div>
 </template>
@@ -11,15 +11,28 @@
 export default {
   data() {
     return {
-      items: []
+      pokemons: []
     }
   },
-  mounted() {
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=10')
-      .then(response => response.json())
-      .then(data => {
-        this.items = data.results
+  async mounted() {
+    const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=10')
+    const data = await res.json()
+
+    const fetchedPokemons = await Promise.all(
+      data.results.map(async (pokemon, index) => {
+        const id = index + 1 // IDは1から始まる
+        const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}/`)
+        const speciesData = await speciesRes.json()
+
+        const japaneseNameObj = speciesData.names.find(n => n.language.name === 'ja')
+        return {
+          id,
+          japaneseName: japaneseNameObj ? japaneseNameObj.name : pokemon.name
+        }
       })
+    )
+
+    this.pokemons = fetchedPokemons
   }
 }
 </script>
