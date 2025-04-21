@@ -2,7 +2,10 @@
   <div>
     <h1>ポケモン図鑑（日本語）</h1>
     <ul>
-      <li v-for="poke in pokemons" :key="poke.id">{{ poke.japaneseName }}</li>
+      <li v-for="poke in pokemons" :key="poke.id">
+        <img :src="poke.image" alt="pokemon image" width="100" height="100"/>
+        {{ poke.japaneseName }}
+      </li>
     </ul>
   </div>
 </template>
@@ -25,9 +28,11 @@ export default {
         const speciesData = await speciesRes.json()
 
         const japaneseNameObj = speciesData.names.find(n => n.language.name === 'ja')
+
         return {
           id,
-          japaneseName: japaneseNameObj ? japaneseNameObj.name : pokemon.name
+          japaneseName: japaneseNameObj ? japaneseNameObj.name : pokemon.name,
+          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
         }
       })
     )
