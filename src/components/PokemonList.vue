@@ -1,21 +1,26 @@
 <template>
-  <div>
+  <div class="container">
     <h1>ポケモン図鑑（日本語）</h1>
-    <input type="text" v-model="searchQuery" placeholder="ポケモンを検索" />
+    <input type="text" v-model="searchQuery" placeholder="ポケモンを検索" class="search-input"/>
 
-    <ul>
-      <li v-for="poke in filteredPokemons" :key="poke.id" @click="showDetails(poke)">
-        <img :src="poke.image" alt="pokemon image" width="100" height="100"/>
-        {{ poke.japaneseName }}
-      </li>
-    </ul>
+    <div class="pokemon-list">
+      <div 
+        v-for="poke in filteredPokemons" 
+        :key="poke.id" 
+        class="pokemon-card" 
+        @click="showDetails(poke)">
+        
+        <img :src="poke.image" alt="pokemon image" class="pokemon-image"/>
+        <div class="pokemon-name">{{ poke.japaneseName }}</div>
+      </div>
+    </div>
 
-    <div v-if="selectedPokemon">
+    <div v-if="selectedPokemon" class="pokemon-details">
       <h2>{{ selectedPokemon.japaneseName }}の詳細</h2>
-      <img :src="selectedPokemon.image" alt="pokemon image" width="150" height="150"/>
-      <p>タイプ: {{ selectedPokemon.types.join(', ') }}</p>
-      <p>高さ: {{ selectedPokemon.height / 10 }} m</p>
-      <p>重さ: {{ selectedPokemon.weight / 10 }} kg</p>
+      <img :src="selectedPokemon.image" alt="pokemon image" class="pokemon-detail-image"/>
+      <p><strong>タイプ:</strong> {{ selectedPokemon.types.join(', ') }}</p>
+      <p><strong>高さ:</strong> {{ selectedPokemon.height / 10 }} m</p>
+      <p><strong>重さ:</strong> {{ selectedPokemon.weight / 10 }} kg</p>
     </div>
   </div>
 </template>
@@ -71,3 +76,68 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.search-input {
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.pokemon-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.pokemon-card {
+  padding: 20px;
+  text-align: center;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.pokemon-card:hover {
+  transform: scale(1.05);
+}
+
+.pokemon-image {
+  width: 100px;
+  height: 100px;
+}
+
+.pokemon-name {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.pokemon-details {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.pokemon-detail-image {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px;
+}
+</style>
