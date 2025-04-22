@@ -17,7 +17,13 @@
       
       <!-- ポケモンリスト -->
       <div class="pokemon-list">
-        <div v-for="poke in filteredPokemons" :key="poke.id" class="pokemon-card" @click="showDetails(poke)">
+        <div
+          v-for="poke in filteredPokemons"
+          :key="poke.id"
+          class="pokemon-card"
+          :class="{ selected: selectedPokemon && selectedPokemon.id === poke.id }"
+          @click="showDetails(poke)"
+        >
           <img :src="poke.image" alt="pokemon image" class="pokemon-image"/>
           <div class="pokemon-name">{{ poke.japaneseName }}</div>
         </div>
@@ -154,6 +160,11 @@ export default {
 
 .pokemon-card:hover {
   transform: scale(1.05);
+}
+
+.pokemon-card.selected {
+  background-color: #e0e0e0; /* グレー系の色 */
+  border: 2px solid #888;
 }
 
 .pokemon-image {
