@@ -1,26 +1,27 @@
 <template>
   <div class="container">
-    <h1>ポケモン図鑑（日本語）</h1>
-    <input type="text" v-model="searchQuery" placeholder="ポケモンを検索" class="search-input"/>
+    <div class="left-section">
+      <!-- 検索バー -->
+      <input type="text" v-model="searchQuery" placeholder="ポケモンを検索" class="search-input"/>
 
-    <div class="pokemon-list">
-      <div 
-        v-for="poke in filteredPokemons" 
-        :key="poke.id" 
-        class="pokemon-card" 
-        @click="showDetails(poke)">
-        
-        <img :src="poke.image" alt="pokemon image" class="pokemon-image"/>
-        <div class="pokemon-name">{{ poke.japaneseName }}</div>
+    <div class="right-section">
+      <!-- 詳細表示エリア -->
+      <div v-if="selectedPokemon" class="pokemon-details">
+        <h2>{{ selectedPokemon.japaneseName }}の詳細</h2>
+        <img :src="selectedPokemon.image" alt="pokemon image" class="pokemon-detail-image"/>
+        <p><strong>タイプ:</strong> {{ selectedPokemon.types.join(', ') }}</p>
+        <p><strong>高さ:</strong> {{ selectedPokemon.height / 10 }} m</p>
+        <p><strong>重さ:</strong> {{ selectedPokemon.weight / 10 }} kg</p>
       </div>
     </div>
-
-    <div v-if="selectedPokemon" class="pokemon-details">
-      <h2>{{ selectedPokemon.japaneseName }}の詳細</h2>
-      <img :src="selectedPokemon.image" alt="pokemon image" class="pokemon-detail-image"/>
-      <p><strong>タイプ:</strong> {{ selectedPokemon.types.join(', ') }}</p>
-      <p><strong>高さ:</strong> {{ selectedPokemon.height / 10 }} m</p>
-      <p><strong>重さ:</strong> {{ selectedPokemon.weight / 10 }} kg</p>
+      
+      <!-- ポケモンリスト -->
+      <div class="pokemon-list">
+        <div v-for="poke in filteredPokemons" :key="poke.id" class="pokemon-card" @click="showDetails(poke)">
+          <img :src="poke.image" alt="pokemon image" class="pokemon-image"/>
+          <div class="pokemon-name">{{ poke.japaneseName }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -97,21 +98,31 @@ export default {
 }
 </script>
 
-
 <style scoped>
 .container {
-  max-width: 800px;
+  /* display: flex;
+  justify-content: space-between; */
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
-  text-align: center;
+  max-width: 1200px; /* コンテンツ全体の幅 */
+}
+
+.left-section {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.right-section {
+  width: 350px; /* 詳細エリアの幅 */
+  max-width: 100%;
+  margin-bottom: 20px;
 }
 
 .search-input {
   padding: 10px;
   margin-bottom: 20px;
   width: 100%;
-  max-width: 400px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -121,6 +132,9 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
+  padding: 20px;
+  max-height: 500px; /* 高さを固定（リストが151匹以上ある場合にスクロールするように） */
+  overflow-y: scroll; /* 縦スクロールを有効に */
 }
 
 .pokemon-card {
@@ -148,12 +162,11 @@ export default {
 }
 
 .pokemon-details {
-  margin-top: 20px;
   padding: 20px;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 10px;
-  text-align: left;
+  text-align: center;
 }
 
 .pokemon-detail-image {
