@@ -89,6 +89,11 @@ export default {
     )
 
     this.pokemons = fetchedPokemons
+
+    // ⭐ ここで最初のポケモンを選択状態にする
+    if (fetchedPokemons.length > 0) {
+      this.selectedPokemon = fetchedPokemons[0]
+    }
   },
   methods: {
     showDetails(pokemon) {
