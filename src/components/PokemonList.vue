@@ -3,6 +3,27 @@
     <div class="left-section">
       <!-- 検索バー -->
       <input type="text" v-model="searchQuery" placeholder="ポケモンを検索" class="search-input"/>
+      <select v-model="selectedType" class="search-type-select">
+        <option value="すべて">すべて</option>
+        <option value="ノーマル">ノーマル</option>
+        <option value="かくとう">かくとう</option>
+        <option value="ひこう">ひこう</option>
+        <option value="どく">どく</option>
+        <option value="じめん">じめん</option>
+        <option value="いわ">いわ</option>
+        <option value="むし">むし</option>
+        <option value="ゴースト">ゴースト</option>
+        <option value="はがね">はがね</option>
+        <option value="ほのお">ほのお</option>
+        <option value="みず">みず</option>
+        <option value="くさ">くさ</option>
+        <option value="でんき">でんき</option>
+        <option value="エスパー">エスパー</option>
+        <option value="こおり">こおり</option>
+        <option value="ドラゴン">ドラゴン</option>
+        <option value="あく">あく</option>
+        <option value="フェアリー">フェアリー</option>
+      </select>
 
     <div class="right-section">
       <!-- 詳細表示エリア -->
@@ -38,7 +59,8 @@ export default {
     return {
       pokemons: [],
       selectedPokemon: null,
-      searchQuery: '',
+      searchQuery: '',        // 名前検索用
+      selectedType: 'すべて', // タイプ検索用（初期値）
       typeMap: {
         normal: 'ノーマル',
         fighting: 'かくとう',
@@ -63,9 +85,11 @@ export default {
   },
   computed: {
     filteredPokemons() {
-      return this.pokemons.filter(poke =>
-        poke.japaneseName.toLowerCase().includes(this.searchQuery.toLowerCase())
-      )
+      return this.pokemons.filter(poke => {
+        const matchesName = poke.japaneseName.includes(this.searchQuery)
+        const matchesType = this.selectedType === 'すべて' || poke.types.includes(this.selectedType)
+        return matchesName && matchesType
+      })
     }
   },
   async mounted() {
@@ -121,7 +145,7 @@ export default {
 
 .left-section {
   flex: 1;
-  padding-right: 20px;
+  /* padding-right: 20px; */
 }
 
 .right-section {
@@ -131,6 +155,15 @@ export default {
 }
 
 .search-input {
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-type-select {
   padding: 10px;
   margin-bottom: 20px;
   width: 100%;
