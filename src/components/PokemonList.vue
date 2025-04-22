@@ -57,11 +57,11 @@
 export default {
   data() {
     return {
-      pokemons: [],
-      selectedPokemon: null,
-      searchQuery: '',        // 名前検索用
-      selectedType: 'すべて', // タイプ検索用（初期値）
-      typeMap: {
+      pokemons: [],                // 取得したポケモン一覧を格納
+      selectedPokemon: null,       // 選択中のポケモン（詳細表示用）
+      searchQuery: '',             // 名前検索用の文字列
+      selectedType: 'すべて',       // タイプ検索の選択状態（デフォルトは「すべて」）
+      typeMap: {                   // 英語のタイプ名 → 日本語の変換マップ
         normal: 'ノーマル',
         fighting: 'かくとう',
         flying: 'ひこう',
@@ -84,48 +84,58 @@ export default {
     }
   },
   computed: {
+    // 名前検索とタイプ選択に応じて、表示するポケモンを絞り込む
     filteredPokemons() {
       return this.pokemons.filter(poke => {
-        const matchesName = poke.japaneseName.includes(this.searchQuery)
-        const matchesType = this.selectedType === 'すべて' || poke.types.includes(this.selectedType)
+        const matchesName = poke.japaneseName.includes(this.searchQuery) // 名前に検索文字列が含まれているか
+        const matchesType = this.selectedType === 'すべて' || poke.types.includes(this.selectedType) // 選択タイプと一致しているか
         return matchesName && matchesType
       })
     }
   },
   async mounted() {
+    // 初期表示時にポケモン151匹を取得する
+
+    // まず全151匹の基本情報を取得
     const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
     const data = await res.json()
 
+    // 各ポケモンに対して追加の詳細情報を取得して整形
     const fetchedPokemons = await Promise.all(
       data.results.map(async (pokemon, index) => {
-        const id = index + 1 // IDは1から始まる
+        const id = index + 1 // ポケモンID（1から始まる）
+
+        // 日本語名の取得
         const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}/`)
         const speciesData = await speciesRes.json()
-
         const japaneseNameObj = speciesData.names.find(n => n.language.name === 'ja')
 
+        // 詳細情報（タイプ、サイズなど）の取得
         const detailsRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
         const detailsData = await detailsRes.json()
 
+        // ポケモンオブジェクトを作成して返す
         return {
           id,
-          japaneseName: japaneseNameObj ? japaneseNameObj.name : pokemon.name,
-          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-          types: detailsData.types.map(type => this.typeMap[type.type.name] || type.type.name), // 日本語に変換
-          height: detailsData.height,
-          weight: detailsData.weight
+          japaneseName: japaneseNameObj ? japaneseNameObj.name : pokemon.name, // 日本語名があれば使う
+          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`, // 画像URL
+          types: detailsData.types.map(type => this.typeMap[type.type.name] || type.type.name), // 日本語タイプ名に変換
+          height: detailsData.height, // 高さ（デシメートル単位）
+          weight: detailsData.weight  // 重さ（ヘクトグラム単位）
         }
       })
     )
 
+    // ポケモン一覧を格納
     this.pokemons = fetchedPokemons
 
-    // ⭐ ここで最初のポケモンを選択状態にする
+    // ⭐ 最初の1匹を選択状態にしておく（詳細表示エリア用）
     if (fetchedPokemons.length > 0) {
       this.selectedPokemon = fetchedPokemons[0]
     }
   },
   methods: {
+    // ポケモンをクリックしたときに詳細情報を表示する
     showDetails(pokemon) {
       this.selectedPokemon = pokemon
     }
