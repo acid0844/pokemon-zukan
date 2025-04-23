@@ -32,6 +32,7 @@ export default {
   align-items: center;
   z-index: 1000;
   backdrop-filter: blur(2px);
+  padding: 0 10px;
 }
 
 .modal-content {
@@ -44,12 +45,22 @@ export default {
   max-height: 80vh;
   overflow-y: auto;
   text-align: center;
+  
+  @media screen and (max-width: 600px) {
+    width: 75%; // ✅ ← スマホ時は90%の幅にする
+    padding: 16px;
+  }
 
   img {
     width: 100%;
     max-height: 200px;
     object-fit: contain;
     margin-bottom: 16px;
+    
+    @media screen and (max-width: 600px) {
+      max-height: 150px;
+      margin-bottom: 0;
+    }
   }
 }
 
