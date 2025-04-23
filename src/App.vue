@@ -5,11 +5,25 @@
 </template>
 
 <script>
-import PokemonList from './components/PokemonList.vue'
+import PokemonList from './components/PokemonList.vue';
 
 export default {
   components: {
-    PokemonList
+    PokemonList,
+  },
+  data() {
+    return {
+      // ... 他のデータ
+      selectedPokemon: null
+    };
+  },
+  methods: {
+    showDetails(pokemon) {
+      this.selectedPokemon = pokemon;
+    },
+    closeModal() {
+      this.selectedPokemon = null;
+    }
   }
 }
 </script>
