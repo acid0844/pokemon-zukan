@@ -143,6 +143,15 @@ export default {
     closeModal() {
       this.selectedPokemon = null;
     }
+  },
+  watch: {
+    selectedPokemon(newVal) {
+      if (newVal) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
   }
 }
 </script>
