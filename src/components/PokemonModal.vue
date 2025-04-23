@@ -1,12 +1,12 @@
 <template>
-  <div class="modal-overlay" @click.self="onClose">
+  <div class="modal-overlay" @click.self="$emit('close')">
     <div class="modal-content">
-      <button class="modal-close" @click="onClose">×</button>
+      <button class="modal-close" @click="$emit('close')">×</button>
       <img :src="pokemon.image" alt="pokemon image" />
       <h2>{{ pokemon.japaneseName }}</h2>
       <p>タイプ: {{ pokemon.types.join(', ') }}</p>
-      <p>身長: {{ pokemon.height }}</p>
-      <p>体重: {{ pokemon.weight }}</p>
+      <p>身長: {{ pokemon.height / 10 }} m</p>
+      <p>体重: {{ pokemon.weight / 10 }} kg</p>
     </div>
   </div>
 </template>
@@ -14,10 +14,9 @@
 <script>
 export default {
   props: {
-    pokemon: Object,
-    onClose: Function
+    pokemon: Object
   }
-};
+}
 </script>
 
 <style scoped lang="scss">
@@ -35,11 +34,12 @@ export default {
 }
 
 .modal-content {
-  background: white;
+  background: #fff;
   padding: 24px;
-  border-radius: 10px;
   width: 90%;
   max-width: 500px;
+  border-radius: 10px;
+  position: relative;
   max-height: 80vh;
   overflow-y: auto;
   text-align: center;
@@ -50,15 +50,26 @@ export default {
     object-fit: contain;
     margin-bottom: 16px;
   }
+}
 
-  .modal-close {
-    position: absolute;
-    top: 10px;
-    right: 16px;
-    background: none;
-    font-size: 24px;
-    border: none;
-    cursor: pointer;
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1;
+  color: #333;
+  background: #f2f2f2;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #ddd;
   }
 }
 </style>

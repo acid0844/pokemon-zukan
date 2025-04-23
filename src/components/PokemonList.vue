@@ -43,7 +43,7 @@
       <PokemonModal
         v-if="selectedPokemon"
         :pokemon="selectedPokemon"
-        :onClose="closeModal"
+        @close="closeModal"
       />
     </div>
   </div>
@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       pokemons: [],                // 取得したポケモン一覧を格納
-      selectedPokemon: null,       // 選択中のポケモン（詳細表示用）
+      selectedPokemon: null,       // 選択中のポケモン（モーダル表示用）
       searchQuery: '',             // 名前検索用の文字列
       selectedType: 'すべて',       // タイプ検索の選択状態（デフォルトは「すべて」）
       typeMap: {                   // 英語のタイプ名 → 日本語の変換マップ
@@ -130,15 +130,18 @@ export default {
     // ポケモン一覧を格納
     this.pokemons = fetchedPokemons
 
-    // ⭐ 最初の1匹を選択状態にしておく（詳細表示エリア用）
-    if (fetchedPokemons.length > 0) {
-      this.selectedPokemon = fetchedPokemons[0]
-    }
+    // ⭐ 最初の1匹を選択状態にしておく（モーダル表示エリア用）
+    // if (fetchedPokemons.length > 0) {
+    //   this.selectedPokemon = fetchedPokemons[0]
+    // }
   },
   methods: {
     // ポケモンをクリックしたときに詳細情報を表示する
     showDetails(pokemon) {
       this.selectedPokemon = pokemon
+    },
+    closeModal() {
+      this.selectedPokemon = null;
     }
   }
 }
@@ -160,7 +163,7 @@ export default {
 }
 
 .right-section {
-  width: 350px; /* 詳細エリアの幅 */
+  width: 350px; /* モーダルエリアの幅 */
   max-width: 100%;
   margin-bottom: 20px;
 }
