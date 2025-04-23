@@ -32,7 +32,6 @@ export default {
   align-items: center;
   z-index: 1000;
   backdrop-filter: blur(2px);
-  padding: 0 10px;
 }
 
 .modal-content {
